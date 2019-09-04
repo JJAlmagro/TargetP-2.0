@@ -43,6 +43,25 @@ os.mkdir(logdir)
 
 folds = data['fold']
 
+# Network Parameters
+n_input = 20
+n_steps = 200
+training_iters = 150
+batch_size = 64
+
+# Hyperparameters
+learning_rate = 0.002
+n_hidden_rnn = 256
+n_filt = 32
+n_hidden = 256
+n_att = 13
+att_size = 144
+e_drop = 0.6
+i_drop = 0.75
+rnn_drop = 0.5
+filt_size = 1
+gamma = 0.1
+
 print('Training...')
 total_models = 0
 # Nested cross-validation loop with 5 folds
@@ -60,9 +79,6 @@ for test_partition in partitions_interval:
 		train_set = np.in1d(folds.ravel(), train_partition).reshape(folds.shape)
 		val_set = np.where(folds == val_partition)
 
-
-
-
 		# Load training data
 		X_train = data['x'][train_set]
 		y_train = data['y_cs'][train_set]
@@ -76,25 +92,6 @@ for test_partition in partitions_interval:
 		len_val = data['len_seq'][val_set]
 		org_val = data['org'][val_set]
 		tp_val = data['y_type'][val_set]
-
-		# Network Parameters
-		n_input = 20
-		n_steps = 200
-		training_iters = 150
-		batch_size = 64
-
-		# Hyperparameters
-		learning_rate = 0.002
-		n_hidden_rnn = 256
-		n_filt = 32
-		n_hidden = 256
-		n_att = 13
-		att_size = 144
-		e_drop = 0.6
-		i_drop = 0.75
-		rnn_drop = 0.5
-		filt_size = 1
-		gamma = 0.1
 
 		# Set seed
 		np.random.seed(val_partition)
