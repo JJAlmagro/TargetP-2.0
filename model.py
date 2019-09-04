@@ -47,9 +47,9 @@ def network(n_hidden_rnn, n_filt, n_hidden, filt_size, i_drop, e_drop, n_att, at
 		return cell
 
 	# Forward direction cell
-	lstm_fw_cell = lstm_cell(n_hidden_rnn, r_drop, "fw1")#,layer_norm=is_training_pl)
+	lstm_fw_cell = lstm_cell(n_hidden_rnn, r_drop, "fw1")
 	# Backward direction cell
-	lstm_bw_cell = lstm_cell(n_hidden_rnn, r_drop, "bw1")#,layer_norm=is_training_pl)
+	lstm_bw_cell = lstm_cell(n_hidden_rnn, r_drop, "bw1")
 
 	# Initial hidden state with organism information
 	l_org_cell = tf.contrib.rnn.LSTMStateTuple(l_organism, l_organism)
@@ -66,11 +66,11 @@ def network(n_hidden_rnn, n_filt, n_hidden, filt_size, i_drop, e_drop, n_att, at
 
 	# Attention matrix, filter size 1 convolution, equivalent to dense layer.
 	hUa = tf.layers.conv1d(final_outputs, filters=att_size, kernel_size=1, 
-		strides=1, padding="same", activation=tf.nn.tanh) #, reuse=False)
+		strides=1, padding="same", activation=tf.nn.tanh) 
 
 	# Align matrix, filter size 1 convolution, equivalent to dense layer.
 	align = tf.layers.conv1d(hUa, filters=n_att, kernel_size=1, 
-		strides=1, padding="same", activation=None)#name='Conv_aln', reuse=False)
+		strides=1, padding="same", activation=None)
 
 
 	# Mask for padded positions
@@ -116,8 +116,6 @@ def network(n_hidden_rnn, n_filt, n_hidden, filt_size, i_drop, e_drop, n_att, at
 	weighted_sum = tf.reduce_sum(weighted_hidden, axis=1)
 
 	# Final dense layer
-	# weighted_out = tf.squeeze(tf.layers.conv1d(weighted_sum, filters=n_filt2, kernel_size=n_att, 
-	# 		strides=1, padding="valid", activation=tf.nn.elu),1)
 	weighted_out = tf.contrib.layers.fully_connected(tf.contrib.layers.flatten(weighted_sum), n_hidden, activation_fn=tf.nn.elu)
 
 	# Protein type prediction
@@ -125,6 +123,7 @@ def network(n_hidden_rnn, n_filt, n_hidden, filt_size, i_drop, e_drop, n_att, at
 		
 	# Softmax operation
 	type_pred = tf.nn.softmax(type_pred_layer, name='Protein_pred')
+	
 	# Calculate cross-entropy for protein type prediction
 	loss_type = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=type_pred_layer, 
 		labels=type_prot))
