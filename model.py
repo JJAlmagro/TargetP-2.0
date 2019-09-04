@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 def network(n_hidden_rnn, n_filt, n_hidden, filt_size, i_drop, e_drop, n_att, att_size,
-	n_input=20, n_steps=200, n_classes=3, n_type=5, n_org=2):
+	n_input=20, n_steps=200, n_type=5, n_org=2):
 	
 		
 	# Input variable 
